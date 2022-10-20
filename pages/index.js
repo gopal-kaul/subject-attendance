@@ -1,54 +1,31 @@
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import Admin from "../components/Admin";
+import Subject from "../components/Subject";
+
+
 export default function Home() {
+  const timetable = {
+    Monday: ["DAA"],
+    Tuesday: ["COMP", "ALC"],
+    Wednesday: ["BEE", "OS"],
+    Thursday: ["OE", "IT", "DM"],
+    Friday: ["DBMS", "S&S"],
+  };
   const [data, setData] = useState({});
   const [date, setDate] = useState(new Date().toLocaleDateString("en-GB"));
-  const [taken, setTaken] = useState(0);
-  const [total, setTotal] = useState(0);
-  const [cancelled, setCancelled] = useState(0);
-  // useEffect(() => {
-  //   if (`${date}` in data === false) {
-  //     setData((old) => ({
-  //       ...old,
-  //       [date]: "",
-  //     }));
-  //   }
-  // }, [date]);
-  useEffect(() => {
-    console.log(data);
-    let tk = 0;
-    let tot = 0;
-    let can = 0;
-    for (let d in data) {
-      if (data[d] === 1) {
-        tk++;
-        tot++;
-      } else if (data[d] === 0) tot++;
-      else if (data[d] === -1) can++;
-    }
-    setTaken(tk);
-    setTotal(tot);
-    setCancelled(can);
-  }, [data]);
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const [day, setDay] = useState(days[new Date().getDay()]);
+  const [view, setView] = useState("student");
 
-  function todayTaken() {
-    setData((old) => ({
-      ...old,
-      [date]: 1,
-    }));
-  }
-  function notTaken() {
-    setData((old) => ({
-      ...old,
-      [date]: 0,
-    }));
-  }
-  function Bandh() {
-    setData((old) => ({
-      ...old,
-      [date]: -1,
-    }));
-  }
   return (
     <div>
       <Head>
@@ -57,55 +34,46 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="px-10 py-10">
-        <p>Current Date : {date}</p>
-        <h3>
-          Set Date :
-          <input
-            type={"date"}
-            id="date"
-            name="date"
-            onChange={(e) => {
-              e.target.valueAsDate !== null &&
-                setDate(e.target.valueAsDate.toLocaleDateString("en-GB"));
-            }}
-          />
-        </h3>
-        <h2>
-          Today&apos;s status :{" "}
-          {data[date] === undefined
-            ? "Not set"
-            : data[date] === 1
-            ? "Class Taken"
-            : data[date] === 0
-            ? "Class Not Taken"
-            : data[date] === -1
-            ? "Class Cancelled"
-            : ""}
-        </h2>
-        <p>Taken Classes : {taken}</p>
-        <p>Total Classes : {total}</p>
-        <p>Cancelled Classes : {cancelled}</p>
-        <div className="flex flex-row gap-4">
-          <button
-            className="bg-blue-500 py-2.5 px-4 text-white rounded-md"
-            onClick={todayTaken}
-          >
-            Class Taken Today
-          </button>
-          <button
-            className="bg-red-500 py-2.5 px-4 text-white rounded-md"
-            onClick={notTaken}
-          >
-            Not Taken Today
-          </button>
-          <button
-            className="bg-indigo-500 py-2.5 px-4 text-white rounded-md"
-            onClick={Bandh}
-          >
-            Bandh
-          </button>
-        </div>
-        <h3>Percentage of Classes Taken : { total!==0 ? `${((taken * 100) / total).toFixed(2)}%` :"No Data!"}</h3>
+        {view === "student" ? (
+          <div className="">
+            <h1 className="text-4xl">Student View : </h1>
+            <p>Selected Date : {date}</p>
+            <p>Day : {day}</p>
+            <p>Selected Day&apos;s subjects : {timetable[day].join(", ")}</p>
+            <h3>
+              Set Date :
+              <input
+                type={"date"}
+                id="date"
+                name="date"
+                onChange={(e) => {
+                  if (e.target.valueAsDate !== null) {
+                    setDate(e.target.valueAsDate.toLocaleDateString("en-GB"));
+                    setDay(days[e.target.valueAsDate.getDay()]);
+                  }
+                }}
+              />
+            </h3>
+            {timetable[day].map((e) => (
+              <Subject
+                key={e}
+                name={e}
+                data={data}
+                setData={setData}
+                date={date}
+              />
+            ))}
+
+            <button
+              onClick={() => setView("admin")}
+              className="px-4 py-2.5 text-white bg-green-500"
+            >
+              Admin View
+            </button>
+          </div>
+        ) : (
+          <Admin data={data} />
+        )}
       </main>
     </div>
   );
