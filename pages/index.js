@@ -11,6 +11,7 @@ export default function Home() {
     Wednesday: ["BEE", "OS"],
     Thursday: ["OE", "IT", "DM"],
     Friday: ["DBMS", "S&S"],
+    Saturday: ["DBMS", "S&S"],
   };
   const [data, setData] = useState({});
   const [date, setDate] = useState(new Date().toLocaleDateString("en-GB"));

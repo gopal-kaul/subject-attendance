@@ -11,7 +11,7 @@ export default function name({ name, data, setData, date }) {
       [date]: { ...old[date], [name]: 0 },
     }));
   }
-  function Bandh() {
+  function Cancelled() {
     setData((old) => ({
       ...old,
       [date]: { ...old[date], [name]: -1 },
@@ -35,9 +35,9 @@ export default function name({ name, data, setData, date }) {
         </button>
         <button
           className="bg-indigo-500 py-2.5 px-4 text-white rounded-md"
-          onClick={Bandh}
+          onClick={Cancelled}
         >
-          Bandh
+          Cancelled
         </button>
         <h2>
           Today&apos;s status :{" "}

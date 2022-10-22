@@ -33,7 +33,7 @@ export default function Admin({ data }) {
           console.log(`${sub} cancelled`);
           admin[sub] = {
             taken: admin[sub].taken,
-            total: admin[sub].total,
+            total: admin[sub].total+1,
             cancelled: admin[sub].cancelled + 1,
           };
           console.log(admin[sub]);
@@ -70,7 +70,7 @@ export default function Admin({ data }) {
               <td className="border py-1 px-2">{admin[e].total}</td>
               <td className="border py-1 px-2">{admin[e].taken}</td>
               <td className="border py-1 px-2">
-                {admin[e].total - admin[e].taken}
+                {admin[e].total - admin[e].taken - admin[e].cancelled}
               </td>
               <td className="border py-1 px-2">{admin[e].cancelled}</td>
             </tr>
