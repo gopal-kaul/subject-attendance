@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-export default function Admin({ data }) {
+
+import { ref, getDatabase, get, child, set } from "firebase/database";
+import { app } from "../lib/firebase";
+export default function Admin() {
+  const dbref = ref(getDatabase(app));
   function present(data) {
     const admin = {};
     for (let date in data) {
@@ -33,22 +37,22 @@ export default function Admin({ data }) {
           console.log(`${sub} cancelled`);
           admin[sub] = {
             taken: admin[sub].taken,
-            total: admin[sub].total+1,
+            total: admin[sub].total + 1,
             cancelled: admin[sub].cancelled + 1,
           };
           console.log(admin[sub]);
         }
       }
     }
-    console.log(admin);
     return admin;
   }
   const [admin, setAdmin] = useState({});
-  console.log(data);
+
   useEffect(() => {
-    setAdmin(present(data));
-    console.log("Admin : ");
-    console.log(admin);
+    get(child(dbref, "data/"))
+      .then((snapshot) => snapshot.val())
+      .then((data) => setAdmin(present(data)))
+      .catch((e) => console.error(e));
   }, []);
   return (
     <div className="pt-10">
